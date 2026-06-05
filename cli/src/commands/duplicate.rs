@@ -38,16 +38,16 @@ use crate::ui::Ui;
 
 /// Create new changes with the same content as existing ones
 ///
-/// When none of the `--onto`, `--insert-after`, or `--insert-before` arguments
-/// are provided, commits will be duplicated onto their existing parents or onto
-/// other newly duplicated commits.
+/// When none of the `--onto`, `--after`, or `--before` arguments are provided,
+/// commits will be duplicated onto their existing parents or onto other newly
+/// duplicated commits.
 ///
-/// When any of the `--onto`, `--insert-after`, or `--insert-before` arguments
-/// are provided, the roots of the specified commits will be duplicated onto the
-/// destination indicated by the arguments. Other specified commits will be
-/// duplicated onto these newly duplicated commits. If the `--insert-after` or
-/// `--insert-before` arguments are provided, the new children indicated by the
-/// arguments will be rebased onto the heads of the specified commits.
+/// When any of the `--onto`, `--after`, or `--before` arguments are provided,
+/// the roots of the specified commits will be duplicated onto the destination
+/// indicated by the arguments. Other specified commits will be duplicated onto
+/// these newly duplicated commits. If the `--after` or `--before` arguments
+/// are provided, the new children indicated by the arguments will be rebased
+/// onto the heads of the specified commits.
 ///
 /// By default, the duplicated commits retain the descriptions of the originals.
 /// This can be customized with the `templates.duplicate_description` setting.
@@ -79,24 +79,24 @@ pub(crate) struct DuplicateArgs {
     #[arg(
         long,
         short = 'A',
-        visible_alias = "after",
+        visible_alias = "insert-after",
         conflicts_with = "onto",
         value_name = "REVSETS"
     )]
     #[arg(add = ArgValueCompleter::new(complete::revset_expression_all))]
-    insert_after: Option<Vec<RevisionArg>>,
+    after: Option<Vec<RevisionArg>>,
 
     /// The revision(s) to insert before (can be repeated to create a merge
     /// commit)
     #[arg(
         long,
         short = 'B',
-        visible_alias = "before",
+        visible_alias = "insert-before",
         conflicts_with = "onto",
         value_name = "REVSETS"
     )]
     #[arg(add = ArgValueCompleter::new(complete::revset_expression_mutable))]
-    insert_before: Option<Vec<RevisionArg>>,
+    before: Option<Vec<RevisionArg>>,
 }
 
 #[instrument(skip_all)]
@@ -125,7 +125,7 @@ pub(crate) async fn cmd_duplicate(
     }
 
     let location =
-        if args.onto.is_none() && args.insert_after.is_none() && args.insert_before.is_none() {
+        if args.onto.is_none() && args.after.is_none() && args.before.is_none() {
             None
         } else {
             Some(
@@ -133,8 +133,8 @@ pub(crate) async fn cmd_duplicate(
                     ui,
                     &workspace_command,
                     args.onto.as_deref(),
-                    args.insert_after.as_deref(),
-                    args.insert_before.as_deref(),
+                    args.after.as_deref(),
+                    args.before.as_deref(),
                     "duplicated commits",
                 )
                 .await?,

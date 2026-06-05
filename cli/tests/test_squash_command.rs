@@ -1757,7 +1757,7 @@ fn test_squash_option_exclusion() {
         "--after=@-"
     ]), @"
     ------- stderr -------
-    error: the argument '--revision <REVSET>' cannot be used with '--insert-after <REVSETS>'
+    error: the argument '--revision <REVSET>' cannot be used with '--after <REVSETS>'
 
     Usage: jj squash --revision <REVSET> [FILESETS]...
 
@@ -1772,7 +1772,7 @@ fn test_squash_option_exclusion() {
         "--before=@-"
     ]), @"
     ------- stderr -------
-    error: the argument '--revision <REVSET>' cannot be used with '--insert-before <REVSETS>'
+    error: the argument '--revision <REVSET>' cannot be used with '--before <REVSETS>'
 
     Usage: jj squash --revision <REVSET> [FILESETS]...
 
@@ -1802,9 +1802,9 @@ fn test_squash_option_exclusion() {
         "--into=@-"
     ]), @"
     ------- stderr -------
-    error: the argument '--insert-after <REVSETS>' cannot be used with '--into <REVSET>'
+    error: the argument '--after <REVSETS>' cannot be used with '--into <REVSET>'
 
-    Usage: jj squash --insert-after <REVSETS> [FILESETS]...
+    Usage: jj squash --after <REVSETS> [FILESETS]...
 
     For more information, try '--help'.
     [EOF]
@@ -1817,9 +1817,9 @@ fn test_squash_option_exclusion() {
         "--into=@-"
     ]), @"
     ------- stderr -------
-    error: the argument '--insert-before <REVSETS>' cannot be used with '--into <REVSET>'
+    error: the argument '--before <REVSETS>' cannot be used with '--into <REVSET>'
 
-    Usage: jj squash --insert-before <REVSETS> [FILESETS]...
+    Usage: jj squash --before <REVSETS> [FILESETS]...
 
     For more information, try '--help'.
     [EOF]
@@ -1877,7 +1877,7 @@ fn test_squash_to_new_commit() -> TestResult {
         "file 3&4",
         "-f",
         "kkmpptxzrspx::",
-        "--insert-before",
+        "--before",
         "qpvuntsmwlqt",
     ]);
     insta::assert_snapshot!(output, @"
@@ -1910,7 +1910,7 @@ fn test_squash_to_new_commit() -> TestResult {
         "file 3&4",
         "-f",
         "kkmpptxzrspx::",
-        "--insert-after",
+        "--after",
         "qpvuntsmwlqt",
     ]);
     insta::assert_snapshot!(output, @"
@@ -1976,7 +1976,7 @@ fn test_squash_to_new_commit() -> TestResult {
         "file 3&4",
         "-f",
         "kkmpptxzrspx::",
-        "--insert-after",
+        "--after",
         "zsuskulnrvyr",
     ]);
     insta::assert_snapshot!(output, @"
@@ -2009,7 +2009,7 @@ fn test_squash_to_new_commit() -> TestResult {
         "file 3&4",
         "-f",
         "kkmpptxzrspx::",
-        "--insert-before",
+        "--before",
         "zsuskulnrvyr",
     ]);
     insta::assert_snapshot!(output, @"
@@ -2076,7 +2076,7 @@ fn test_squash_to_new_commit() -> TestResult {
         "squash",
         "-f",
         "kkmpptxzrspx::zsuskulnrvyr",
-        "--insert-before",
+        "--before",
         "qpvuntsmwlqt",
     ]);
     insta::assert_snapshot!(output, @"
@@ -2159,7 +2159,7 @@ fn test_squash_to_new_commit() -> TestResult {
         "squash",
         "-f",
         "kkmpptxzrspx::zsuskulnrvyr",
-        "--insert-before",
+        "--before",
         "qpvuntsmwlqt",
         "--use-destination-message",
     ]);
@@ -2190,7 +2190,7 @@ fn test_squash_to_new_commit() -> TestResult {
         "squash",
         "-f",
         "none()",
-        "--insert-before",
+        "--before",
         "qpvuntsmwlqt",
         "--use-destination-message",
     ]);
@@ -2232,7 +2232,7 @@ fn test_squash_to_new_commit() -> TestResult {
         "squash",
         "-f",
         "kkmpptxzrspx::zsuskulnrvyr",
-        "--insert-before",
+        "--before",
         "qpvuntsmwlqt",
         "--use-destination-message",
         "no file",
@@ -2328,9 +2328,9 @@ fn test_squash_to_new_commit() -> TestResult {
         "file 3&4",
         "-f",
         "kkmpptxzrspx::",
-        "--insert-after",
+        "--after",
         "root()",
-        "--insert-before",
+        "--before",
         "rlvkpnrzqnoo",
     ]);
     insta::assert_snapshot!(output, @"

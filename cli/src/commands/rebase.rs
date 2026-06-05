@@ -63,9 +63,9 @@ use crate::ui::Ui;
 /// rebased to:
 ///
 /// * `--onto/-o` to rebase the revisions onto the specified targets
-/// * `--insert-after/-A` to rebase the revisions onto the specified targets and
-///   to rebase the targets' descendants onto the rebased revisions
-/// * `--insert-before/-B` to rebase the revisions onto the specified targets'
+/// * `--after/-A` to rebase the revisions onto the specified targets and to
+///   rebase the targets' descendants onto the rebased revisions
+/// * `--before/-B` to rebase the revisions onto the specified targets'
 ///   parents and to rebase the targets and their descendants onto the rebased
 ///   revisions
 ///
@@ -187,7 +187,7 @@ use crate::ui::Ui;
 /// targets. Existing descendants of the targets will not be affected. See
 /// the section above for examples.
 ///
-/// With `--insert-after/-A`, the selected revisions will be inserted after the
+/// With `--after/-A`, the selected revisions will be inserted after the
 /// targets. This is similar to `-o`, but if the targets have any existing
 /// descendants, then those will be rebased onto the rebased selected revisions.
 ///
@@ -216,7 +216,7 @@ use crate::ui::Ui;
 /// J          J
 /// ```
 ///
-/// With `--insert-before/-B`, the selected revisions will be inserted before
+/// With `--before/-B`, the selected revisions will be inserted before
 /// the targets. This is achieved by rebasing the selected revisions onto the
 /// target revisions' parents, and then rebasing the target revisions and their
 /// descendants onto the rebased revisions.
@@ -345,24 +345,24 @@ pub struct RebaseDestinationArgs {
     #[arg(
         long,
         short = 'A',
-        visible_alias = "after",
+        visible_alias = "insert-after",
         conflicts_with = "onto",
         value_name = "REVSETS"
     )]
     #[arg(add = ArgValueCompleter::new(complete::revset_expression_all))]
-    insert_after: Option<Vec<RevisionArg>>,
+    after: Option<Vec<RevisionArg>>,
 
     /// The revision(s) to insert before (can be repeated to create a merge
     /// commit)
     #[arg(
         long,
         short = 'B',
-        visible_alias = "before",
+        visible_alias = "insert-before",
         conflicts_with = "onto",
         value_name = "REVSETS"
     )]
     #[arg(add = ArgValueCompleter::new(complete::revset_expression_mutable))]
-    insert_before: Option<Vec<RevisionArg>>,
+    before: Option<Vec<RevisionArg>>,
 }
 
 #[instrument(skip_all)]
@@ -450,8 +450,8 @@ async fn plan_rebase_revisions(
         ui,
         workspace_command,
         rebase_destination.onto.as_deref(),
-        rebase_destination.insert_after.as_deref(),
-        rebase_destination.insert_before.as_deref(),
+        rebase_destination.after.as_deref(),
+        rebase_destination.before.as_deref(),
         "rebased commits",
     )
     .await?;
@@ -491,8 +491,8 @@ async fn plan_rebase_source(
         ui,
         workspace_command,
         rebase_destination.onto.as_deref(),
-        rebase_destination.insert_after.as_deref(),
-        rebase_destination.insert_before.as_deref(),
+        rebase_destination.after.as_deref(),
+        rebase_destination.before.as_deref(),
         "rebased commits",
     )
     .await?;
@@ -540,8 +540,8 @@ async fn plan_rebase_branch(
         ui,
         workspace_command,
         rebase_destination.onto.as_deref(),
-        rebase_destination.insert_after.as_deref(),
-        rebase_destination.insert_before.as_deref(),
+        rebase_destination.after.as_deref(),
+        rebase_destination.before.as_deref(),
         "rebased commits",
     )
     .await?;

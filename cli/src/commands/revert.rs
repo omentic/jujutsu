@@ -46,7 +46,7 @@ use crate::ui::Ui;
 /// The description of the new revisions can be customized with the
 /// `templates.revert_description` config variable.
 #[derive(clap::Args, Clone, Debug)]
-#[command(group(ArgGroup::new("location").args(&["onto", "insert_after", "insert_before"]).multiple(true).required(true)))]
+#[command(group(ArgGroup::new("location").args(&["onto", "after", "before"]).multiple(true).required(true)))]
 pub(crate) struct RevertArgs {
     /// The revision(s) to apply the reverse of
     #[arg(
@@ -75,24 +75,24 @@ pub(crate) struct RevertArgs {
     #[arg(
         long,
         short = 'A',
-        visible_alias = "after",
+        visible_alias = "insert-after",
         conflicts_with = "onto",
         value_name = "REVSETS"
     )]
     #[arg(add = ArgValueCompleter::new(complete::revset_expression_all))]
-    insert_after: Option<Vec<RevisionArg>>,
+    after: Option<Vec<RevisionArg>>,
 
     /// The revision(s) to insert the reverse changes before (can be repeated to
     /// create a merge commit)
     #[arg(
         long,
         short = 'B',
-        visible_alias = "before",
+        visible_alias = "insert-before",
         conflicts_with = "onto",
         value_name = "REVSETS"
     )]
     #[arg(add = ArgValueCompleter::new(complete::revset_expression_mutable))]
-    insert_before: Option<Vec<RevisionArg>>,
+    before: Option<Vec<RevisionArg>>,
 }
 
 #[instrument(skip_all)]
@@ -115,8 +115,8 @@ pub(crate) async fn cmd_revert(
         ui,
         &workspace_command,
         args.onto.as_deref(),
-        args.insert_after.as_deref(),
-        args.insert_before.as_deref(),
+        args.after.as_deref(),
+        args.before.as_deref(),
         "reverted commits",
     )
     .await?;

@@ -418,8 +418,8 @@ fn test_rewrite_immutable_commands() {
     [EOF]
     [exit status: 1]
     "#);
-    // new --insert-before
-    let output = work_dir.run_jj(["new", "--insert-before", "main"]);
+    // new --before
+    let output = work_dir.run_jj(["new", "--before", "main"]);
     insta::assert_snapshot!(output, @r#"
     ------- stderr -------
     Error: Commit 1ca17106e94f is immutable
@@ -432,8 +432,8 @@ fn test_rewrite_immutable_commands() {
     [EOF]
     [exit status: 1]
     "#);
-    // new --insert-after parent_of_main
-    let output = work_dir.run_jj(["new", "--insert-after", "subject(b)"]);
+    // new --after parent_of_main
+    let output = work_dir.run_jj(["new", "--after", "subject(b)"]);
     insta::assert_snapshot!(output, @r#"
     ------- stderr -------
     Error: Commit 1ca17106e94f is immutable

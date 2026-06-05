@@ -150,12 +150,12 @@ pub(crate) struct SplitArgs {
     #[arg(
         long,
         short = 'A',
-        visible_alias = "after",
+        visible_alias = "insert-after",
         conflicts_with_all = ["onto", "parallel"],
         value_name = "REVSETS"
     )]
     #[arg(add = ArgValueCompleter::new(complete::revset_expression_all))]
-    insert_after: Option<Vec<RevisionArg>>,
+    after: Option<Vec<RevisionArg>>,
 
     /// The revision(s) to insert before (can be repeated to create a merge
     /// commit)
@@ -166,12 +166,12 @@ pub(crate) struct SplitArgs {
     #[arg(
         long,
         short = 'B',
-        visible_alias = "before",
+        visible_alias = "insert-before",
         conflicts_with_all = ["onto", "parallel"],
         value_name = "REVSETS"
     )]
     #[arg(add = ArgValueCompleter::new(complete::revset_expression_mutable))]
-    insert_before: Option<Vec<RevisionArg>>,
+    before: Option<Vec<RevisionArg>>,
 
     /// The change description to use for the selected changes (don't open
     /// editor)
@@ -222,14 +222,14 @@ impl SplitArgs {
             self.interactive || self.paths.is_empty(),
         )?;
         let use_move_flags =
-            self.onto.is_some() || self.insert_after.is_some() || self.insert_before.is_some();
+            self.onto.is_some() || self.after.is_some() || self.before.is_some();
         let (new_parent_ids, new_child_ids) = if use_move_flags {
             compute_commit_location(
                 ui,
                 workspace_command,
                 self.onto.as_deref(),
-                self.insert_after.as_deref(),
-                self.insert_before.as_deref(),
+                self.after.as_deref(),
+                self.before.as_deref(),
                 "split-out commit",
             )
             .await?

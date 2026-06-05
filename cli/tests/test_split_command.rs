@@ -1369,7 +1369,7 @@ fn test_split_move_first_commit() -> TestResult {
         "file1",
         "-r",
         "qpvuntsmwlqt",
-        "--insert-after",
+        "--after",
         "qpvuntsmwlqt",
         "file1",
     ]);
@@ -1441,9 +1441,9 @@ fn test_split_move_first_commit() -> TestResult {
         "file1",
         "-r",
         "qpvuntsmwlqt",
-        "--insert-after",
+        "--after",
         "qpvuntsmwlqt",
-        "--insert-before",
+        "--before",
         "kkmpptxzrspx",
         "file1",
     ]);

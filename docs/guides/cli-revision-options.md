@@ -19,12 +19,12 @@ These flags are used to specify the sources of the operation:
 These flags are used when commands need both a "source" revision and a
 "destination" revision:
 
-| Long flag         | Short flag | Description                                                                                                                      |
-| ----------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `--onto`          | `-o`       | Create children of the specified revisions.                                                                                      |
-| `--insert-after`  | `-A`       | Insert _between_ the specified revisions and their children.                                                                     |
-| `--insert-before` | `-B`       | Insert _between_ the specified revisions and their parents.                                                                      |
-| `--to`, `--into`  | `-t`       | Which revision to place the selected _contents_ into, or move the bookmarks to, or compare the `from` revision contents against. |
+| Long flag        | Short flag | Description                                                                                                                      |
+| ---------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `--onto`         | `-o`       | Create children of the specified revisions.                                                                                      |
+| `--after`        | `-A`       | Insert _between_ the specified revisions and their children.                                                                     |
+| `--before`       | `-B`       | Insert _between_ the specified revisions and their parents.                                                                      |
+| `--to`, `--into` | `-t`       | Which revision to place the selected _contents_ into, or move the bookmarks to, or compare the `from` revision contents against. |
 
 ## Manipulating revisions
 
@@ -48,8 +48,8 @@ Examples of `-r` and `-s`:
 Commands that move revisions around also need to specify the destinations.
 
 - `--onto REV` (`-o REV`) places revisions as children of `REV`.
-- `--insert-after REV` (`-A REV`) inserts revisions as children of `REV` and parents of `REV+`.
-- `--insert-before REV` (`-B REV`) inserts revisions as the children of `REV-` and parents of `REV`.
+- `--after REV` (`-A REV`) inserts revisions as children of `REV` and parents of `REV+`.
+- `--before REV` (`-B REV`) inserts revisions as the children of `REV-` and parents of `REV`.
 
 Examples:
 

@@ -377,8 +377,8 @@ fn test_new_insert_after() {
     [EOF]
     ");
 
-    // --insert-after can be repeated; --after is an alias
-    let output = work_dir.run_jj(["new", "-m", "G", "--insert-after", "B", "--after", "D"]);
+    // --after can be repeated; --insert-after is an alias
+    let output = work_dir.run_jj(["new", "-m", "G", "--after", "B", "--insert-after", "D"]);
     insta::assert_snapshot!(output, @"
     ------- stderr -------
     Rebased 2 descendant commits
@@ -405,7 +405,7 @@ fn test_new_insert_after() {
 
     // Inserting a new commit should not change the order of its child commits'
     // parents (i.e. G should have the parents H and D).
-    let output = work_dir.run_jj(["new", "-m", "H", "--insert-after", "B"]);
+    let output = work_dir.run_jj(["new", "-m", "H", "--after", "B"]);
     insta::assert_snapshot!(output, @"
     ------- stderr -------
     Rebased 3 descendant commits
@@ -434,11 +434,11 @@ fn test_new_insert_after() {
     let output = work_dir.run_jj(["new", "--after", "B", "D"]);
     insta::assert_snapshot!(output, @"
     ------- stderr -------
-    error: the argument '--insert-after <REVSETS>' cannot be used with:
+    error: the argument '--after <REVSETS>' cannot be used with:
       [REVSETS]...
       -o <REVSETS>
 
-    Usage: jj new --insert-after <REVSETS> [REVSETS]...
+    Usage: jj new --after <REVSETS> [REVSETS]...
 
     For more information, try '--help'.
     [EOF]
@@ -472,9 +472,9 @@ fn test_new_insert_after_children() {
         "new",
         "-m",
         "G",
-        "--insert-after",
+        "--after",
         "A",
-        "--insert-after",
+        "--after",
         "C",
     ]);
     insta::assert_snapshot!(output, @"
@@ -509,9 +509,9 @@ fn test_new_insert_before() {
         "new",
         "-m",
         "G",
-        "--insert-before",
+        "--before",
         "C",
-        "--insert-before",
+        "--before",
         "F",
     ]);
     insta::assert_snapshot!(output, @"
@@ -543,11 +543,11 @@ fn test_new_insert_before() {
     let output = work_dir.run_jj(["new", "--before", "B", "D"]);
     insta::assert_snapshot!(output, @"
     ------- stderr -------
-    error: the argument '--insert-before <REVSETS>' cannot be used with:
+    error: the argument '--before <REVSETS>' cannot be used with:
       [REVSETS]...
       -o <REVSETS>
 
-    Usage: jj new --insert-before <REVSETS> [REVSETS]...
+    Usage: jj new --before <REVSETS> [REVSETS]...
 
     For more information, try '--help'.
     [EOF]
@@ -579,9 +579,9 @@ fn test_new_insert_before_root_successors() {
         "new",
         "-m",
         "G",
-        "--insert-before",
+        "--before",
         "A",
-        "--insert-before",
+        "--before",
         "D",
     ]);
     insta::assert_snapshot!(output, @"
@@ -633,9 +633,9 @@ fn test_new_insert_before_no_loop() {
         "new",
         "-m",
         "G",
-        "--insert-before",
+        "--before",
         "A",
-        "--insert-before",
+        "--before",
         "C",
     ]);
     insta::assert_snapshot!(output, @"
@@ -670,9 +670,9 @@ fn test_new_insert_before_no_root_merge() {
         "new",
         "-m",
         "G",
-        "--insert-before",
+        "--before",
         "B",
-        "--insert-before",
+        "--before",
         "D",
     ]);
     insta::assert_snapshot!(output, @"
@@ -703,7 +703,7 @@ fn test_new_insert_before_root() {
     [EOF]
     ");
 
-    let output = work_dir.run_jj(["new", "-m", "G", "--insert-before", "root()"]);
+    let output = work_dir.run_jj(["new", "-m", "G", "--before", "root()"]);
     insta::assert_snapshot!(output, @"
     ------- stderr -------
     Error: The root commit 000000000000 is immutable
@@ -808,9 +808,9 @@ fn test_new_insert_after_before_no_loop() {
         "new",
         "-m",
         "G",
-        "--insert-before",
+        "--before",
         "A",
-        "--insert-after",
+        "--after",
         "C",
     ]);
     insta::assert_snapshot!(output, @"
@@ -843,7 +843,7 @@ fn test_new_insert_after_empty_before() {
     [EOF]
     ");
 
-    let output = work_dir.run_jj(["new", "-mG", "--insert-before=none()"]);
+    let output = work_dir.run_jj(["new", "-mG", "--before=none()"]);
     insta::assert_snapshot!(output, @"
     ------- stderr -------
     Error: No revisions found to use as parent
@@ -851,7 +851,7 @@ fn test_new_insert_after_empty_before() {
     [exit status: 1]
     ");
 
-    let output = work_dir.run_jj(["new", "-mG", "--insert-before=none()", "--insert-after=B"]);
+    let output = work_dir.run_jj(["new", "-mG", "--before=none()", "--after=B"]);
     insta::assert_snapshot!(output, @"
     ------- stderr -------
     Working copy  (@) now at: nkmrtpmo d7088f92 (empty) G

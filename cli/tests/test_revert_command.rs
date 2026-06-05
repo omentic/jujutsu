@@ -48,9 +48,9 @@ fn test_revert() {
     insta::assert_snapshot!(output, @"
     ------- stderr -------
     error: the following required arguments were not provided:
-      <--onto <REVSETS>|--insert-after <REVSETS>|--insert-before <REVSETS>>
+      <--onto <REVSETS>|--after <REVSETS>|--before <REVSETS>>
 
-    Usage: jj revert --revision <REVSETS> <--onto <REVSETS>|--insert-after <REVSETS>|--insert-before <REVSETS>>
+    Usage: jj revert --revision <REVSETS> <--onto <REVSETS>|--after <REVSETS>|--before <REVSETS>>
 
     For more information, try '--help'.
     [EOF]
@@ -111,7 +111,7 @@ fn test_revert() {
     ");
     work_dir.run_jj(["op", "restore", &setup_opid]).success();
 
-    // Revert the commit with `--insert-after`
+    // Revert the commit with `--after`
     let output = work_dir.run_jj(["revert", "-ra", "-Ab"]);
     insta::assert_snapshot!(output, @r#"
     ------- stderr -------
@@ -141,7 +141,7 @@ fn test_revert() {
     ");
     work_dir.run_jj(["op", "restore", &setup_opid]).success();
 
-    // Revert the commit with `--insert-before`
+    // Revert the commit with `--before`
     let output = work_dir.run_jj(["revert", "-ra", "-Bd"]);
     insta::assert_snapshot!(output, @r#"
     ------- stderr -------
@@ -171,7 +171,7 @@ fn test_revert() {
     ");
     work_dir.run_jj(["op", "restore", &setup_opid]).success();
 
-    // Revert the commit with `--insert-after` and `--insert-before`
+    // Revert the commit with `--after` and `--before`
     let output = work_dir.run_jj(["revert", "-ra", "-Aa", "-Bd"]);
     insta::assert_snapshot!(output, @r#"
     ------- stderr -------

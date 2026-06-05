@@ -124,24 +124,24 @@ pub(crate) struct SquashArgs {
     #[arg(
         long,
         short = 'A',
-        visible_alias = "after",
+        visible_alias = "insert-after",
         conflicts_with_all = ["onto", "into", "revision"],
         value_name = "REVSETS"
     )]
     #[arg(add = ArgValueCompleter::new(complete::revset_expression_all))]
-    insert_after: Option<Vec<RevisionArg>>,
+    after: Option<Vec<RevisionArg>>,
 
     /// (Experimental) The revision(s) to insert the new commit before (can be
     /// repeated to create a merge commit)
     #[arg(
         long,
         short = 'B',
-        visible_alias = "before",
+        visible_alias = "insert-before",
         conflicts_with_all = ["onto", "into", "revision"],
         value_name = "REVSETS"
     )]
     #[arg(add = ArgValueCompleter::new(complete::revset_expression_mutable))]
-    insert_before: Option<Vec<RevisionArg>>,
+    before: Option<Vec<RevisionArg>>,
 
     /// The description to use for squashed revision (don't open editor)
     #[arg(long = "message", short, value_name = "MESSAGE")]
@@ -185,7 +185,7 @@ pub(crate) async fn cmd_squash(
     args: &SquashArgs,
 ) -> Result<(), CommandError> {
     let insert_destination_commit =
-        args.onto.is_some() || args.insert_after.is_some() || args.insert_before.is_some();
+        args.onto.is_some() || args.after.is_some() || args.before.is_some();
 
     let mut workspace_command = command.workspace_helper(ui).await?;
 
@@ -258,8 +258,8 @@ pub(crate) async fn cmd_squash(
             ui,
             tx.base_workspace_helper(),
             args.onto.as_deref(),
-            args.insert_after.as_deref(),
-            args.insert_before.as_deref(),
+            args.after.as_deref(),
+            args.before.as_deref(),
             "squashed commit",
         )
         .await?;

@@ -288,8 +288,8 @@ Now you're ready to work:
 
 As you work, squash your changes using `jj squash --into xxxxxxxx`.
 
-If you need a new empty commit on top of `xxxxxxxx` you can use the
-`--insert-after` and `--insert-before` options (`-A` and `-B` for short):
+If you need a new empty commit on top of `xxxxxxxx` you can use the `--after`
+and `--before` options (`-A` and `-B` for short):
 
 ```shell
 # Insert a new commit after xxxxxxxx

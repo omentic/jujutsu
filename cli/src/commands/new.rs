@@ -81,8 +81,8 @@ pub(crate) struct NewArgs {
 
     /// Insert the new change after the given commit(s)
     ///
-    /// Example: `jj new --insert-after A` creates a new change between `A` and
-    /// its children:
+    /// Example: `jj new --after A` creates a new change between `A` and its
+    /// children:
     ///
     /// ```text
     ///                 B   C
@@ -92,12 +92,11 @@ pub(crate) struct NewArgs {
     ///       A           A
     /// ```
     ///
-    /// Specifying `--insert-after` multiple times will relocate all children of
+    /// Specifying `--after` multiple times will relocate all children of
     /// the given commits.
     ///
-    /// Example: `jj new --insert-after A --insert-after X` creates a change
-    /// with `A` and `X` as parents, and rebases all children on top of the new
-    /// change:
+    /// Example: `jj new --after A --after X` creates a change with `A` and `X`
+    /// as parents, and rebases all children on top of the new change:
     ///
     /// ```text
     ///                 B   Y
@@ -109,18 +108,18 @@ pub(crate) struct NewArgs {
     #[arg(
         long,
         short = 'A',
-        visible_alias = "after",
+        visible_alias = "insert-after",
         conflicts_with = "revisions",
         value_name = "REVSETS",
         verbatim_doc_comment
     )]
     #[arg(add = ArgValueCompleter::new(complete::revset_expression_all))]
-    insert_after: Option<Vec<RevisionArg>>,
+    after: Option<Vec<RevisionArg>>,
 
     /// Insert the new change before the given commit(s)
     ///
-    /// Example: `jj new --insert-before C` creates a new change between `C` and
-    /// its parents:
+    /// Example: `jj new --before C` creates a new change between `C` and its
+    /// parents:
     ///
     /// ```text
     ///                    C
@@ -130,12 +129,12 @@ pub(crate) struct NewArgs {
     ///     A   B        A   B
     /// ```
     ///
-    /// `--insert-after` and `--insert-before` can be combined.
+    /// `--after` and `--before` can be combined.
     ///
-    /// Example: `jj new --insert-after A --insert-before D`:
+    /// Example: `jj new --after A --before D`:
     ///
     /// ```text
-    /// 
+    ///
     ///     D            D
     ///     |           / \
     ///     C          |   C
@@ -145,18 +144,17 @@ pub(crate) struct NewArgs {
     ///     A            A
     /// ```
     ///
-    /// Similar to `--insert-after`, you can specify `--insert-before` multiple
-    /// times.
+    /// Similar to `--after`, you can specify `--before` multiple times.
     #[arg(
         long,
         short = 'B',
-        visible_alias = "before",
+        visible_alias = "insert-before",
         conflicts_with = "revisions",
         value_name = "REVSETS",
         verbatim_doc_comment
     )]
     #[arg(add = ArgValueCompleter::new(complete::revset_expression_mutable))]
-    insert_before: Option<Vec<RevisionArg>>,
+    before: Option<Vec<RevisionArg>>,
 }
 
 #[instrument(skip_all)]
@@ -168,7 +166,7 @@ pub(crate) async fn cmd_new(
     let mut workspace_command = command.workspace_helper(ui).await?;
 
     let revision_args = match (&args.revisions_pos, &args.revisions_opt) {
-        (None, None) => (args.insert_before.is_none() && args.insert_after.is_none())
+        (None, None) => (args.before.is_none() && args.after.is_none())
             .then(|| vec![RevisionArg::AT]),
         (None, Some(args)) | (Some(args), None) => Some(args.clone()),
         (Some(pos), Some(opt)) => Some(merge_args_with(
@@ -181,8 +179,8 @@ pub(crate) async fn cmd_new(
         ui,
         &workspace_command,
         revision_args.as_deref(),
-        args.insert_after.as_deref(),
-        args.insert_before.as_deref(),
+        args.after.as_deref(),
+        args.before.as_deref(),
         "new commit",
     )
     .await?;
@@ -195,7 +193,7 @@ pub(crate) async fn cmd_new(
     let mut advance_bookmarks_target = None;
     let mut advanceable_bookmarks = vec![];
 
-    if args.insert_before.is_none() && args.insert_after.is_none() {
+    if args.before.is_none() && args.after.is_none() {
         let should_advance_bookmarks = parent_commits.len() == 1;
         if should_advance_bookmarks {
             advance_bookmarks_target = Some(parent_commit_ids[0].clone());
